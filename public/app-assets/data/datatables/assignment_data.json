@@ -1,0 +1,71 @@
+{
+  "demo": [
+    [
+      "<a data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'>
+                    <i class='fa fa-ellipsis-h info font-medium-1'></i>
+                </a>
+                <div class='dropdown-menu'>
+                    <a class='dropdown-item' id='urls-tab1' href='#urls' data-toggle='tab' aria-controls='urls'
+                        aria-expanded='true'>Schedule Study Time</a>
+                    <a class='dropdown-item' id='apks-tab1' href='#apks' data-toggle='tab' aria-controls='apks'
+                        aria-expanded='true'>Mark Complete</a>
+                    <a class='dropdown-item' id='apks-tab1' href='#hive' data-toggle='tab' aria-controls='apks'
+                        aria-expanded='true'>Hive Digital Resources</a>
+                    <a class='dropdown-item' id='apks-tab1' href='#apks' data-toggle='tab' aria-controls='grade'
+                        aria-expanded='true'>Update Grade / Marks</a>
+                </div>",
+      "<a target='_blank' href='#'>Theory of Computation</a>",
+      "08/18/2020",
+      "<a href='#' class='btn yellow-stripe'>
+                    <i class='fa fa-adjust warning'></i> In Progress</a>"
+    ],
+    [
+      "Garrett Winters",
+      "Accountant",
+      "Tokyo",
+      "8422",
+      "2011/07/25",
+      "$170,750"
+    ],
+    [
+      "Ashton Cox",
+      "Junior Technical Author",
+      "San Francisco",
+      "1562",
+      "2009/01/12",
+      "$86,000"
+    ],
+    [
+      "Cedric Kelly",
+      "Senior Javascript Developer",
+      "Edinburgh",
+      "6224",
+      "2012/03/29",
+      "$433,060"
+    ],
+    [
+      "Airi Satou",
+      "Accountant",
+      "Tokyo",
+      "5407",
+      "2008/11/28",
+      "$162,700"
+    ],
+    [
+      "Brielle Williamson",
+      "Integration Specialist",
+      "New York",
+      "4804",
+      "2012/12/02",
+      "$372,000"
+    ],
+    [
+      "Herrod Chandler",
+      "Sales Assistant",
+      "San Francisco",
+      "9608",
+      "2012/08/06",
+      "$137,500"
+    ]
+  ]
+}

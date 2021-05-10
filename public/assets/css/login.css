@@ -1,0 +1,44 @@
+          html, body {
+              background-color: transparent;
+                /* background: #fafafa;
+                background: url("../../app-assets/images/backgrounds/bg-16.jpg") no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover; */
+            }
+            .flexbox-container{
+                display: flex;
+                height: 100vh;
+            }
+            .card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 2rem;
+        }
+
+        .card-header {
+            background-color: transparent;
+        }
+
+        form .form-group {
+            margin-bottom: 1.1rem;
+        }
+
+        form .form-control {
+            color: #5a5a5a;
+            border: 1px solid #ccc;
+        }
+
+        .text-muted {
+            color: #55595c !important;
+            line-height: 30px;
+        }
+        .register-main .form-control-position i.fa{
+            line-height: 3.2;
+        }
+        .has-icon-left .form-control-position {
+            justify-content: center;
+            line-height: 1rem!important;
+            top: 8px;
+        }
+      
