@@ -104,7 +104,7 @@ class PrivateChat
 	function save_chat()
 	{
 		$query="insert into chat_message (to_user_id,from_user_id,chat_message,timestamp,status) 
-		values (:to_user_id,:from_user_id,:chat_message,:timestamp,:status)";
+		values (:to_user_id,:from_user_id,:chat_message,UTC_TIMESTAMP,:status)";
 		
 		$statement = $this->connect->prepare($query);
 		
@@ -114,7 +114,7 @@ class PrivateChat
 		
 		$statement->bindParam(':chat_message',$this->chat_message);
 		
-		$statement->bindParam(':timestamp',$this->timestamp);
+		//$statement->bindParam(':timestamp',$this->timestamp);
 		
 		$statement->bindParam(':status',$this->status);
 		

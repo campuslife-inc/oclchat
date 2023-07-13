@@ -1,0 +1,1 @@
+nohup php -c "etc/php.ini" "/var/www/oclchat/bin/server.php" &

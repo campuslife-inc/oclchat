@@ -13,6 +13,8 @@ class ChatUser
 	private $user_created_on;
 	private $user_verification_code;
 	private $user_login_status;
+	private $user_token;
+	private $user_connection_id;
 	public $connect;
 
 	public function __construct()
@@ -114,6 +116,25 @@ class ChatUser
 		return $this->user_login_status;
 	}
 
+	function setUserToken($user_token)
+	{
+		$this->user_token = $user_token;
+	}
+	function getUserToken()
+	{
+		return $this->user_token;
+	}
+
+	function setUserConnectionId($user_connection_id)
+	{
+		$this->user_connection_id = $user_connection_id;
+	}
+	function getUserConnectionId()
+	{
+		$this->user_connection_id ;
+	}
+
+
 	function make_avatar($character)
 	{
 	    $path = "images/". time() . ".png";
@@ -134,9 +155,14 @@ class ChatUser
 
 	function get_user_data_by_email()
 	{
+		// $query = "
+		// SELECT * FROM chat_user_table 
+		// WHERE user_email = :user_email
+		// ";
+
 		$query = "
-		SELECT * FROM chat_user_table 
-		WHERE user_email = :user_email
+		SELECT * FROM users 
+		WHERE email = :user_email
 		";
 
 		$statement = $this->connect->prepare($query);
@@ -213,6 +239,8 @@ class ChatUser
 		WHERE user_verification_code = :user_verification_code
 		";
 
+		
+
 		$statement = $this->connect->prepare($query);
 
 		$statement->bindParam(':user_status', $this->user_status);
@@ -231,10 +259,16 @@ class ChatUser
 
 	function update_user_login_data()
 	{
+		// $query = "
+		// UPDATE chat_user_table 
+		// SET user_login_status = :user_login_status 
+		// WHERE user_id = :user_id
+		// ";
+
 		$query = "
-		UPDATE chat_user_table 
+		UPDATE users 
 		SET user_login_status = :user_login_status 
-		WHERE user_id = :user_id
+		WHERE id = :user_id
 		";
 
 		$statement = $this->connect->prepare($query);
@@ -256,8 +290,8 @@ class ChatUser
 	function get_user_data_by_id()
 	{
 		$query = "
-		SELECT * FROM chat_user_table 
-		WHERE user_id = :user_id";
+		SELECT * FROM users INNER JOIN userprofiles upf on upf.userid  = users.id
+		WHERE users.id = :user_id";
 
 		$statement = $this->connect->prepare($query);
 
@@ -325,8 +359,12 @@ class ChatUser
 
 	function get_user_all_data()
 	{
+		// $query = "
+		// SELECT * FROM chat_user_table 
+		// ";
+
 		$query = "
-		SELECT * FROM chat_user_table 
+		SELECT * FROM users 
 		";
 
 		$statement = $this->connect->prepare($query);
@@ -352,6 +390,34 @@ class ChatUser
 		$data=$statement->fetchAll(PDO::FETCH_ASSOC);
 		
 		return $data;
+	}
+
+	function update_user_connection_id()
+	{
+		$query = "
+		update users 
+		set user_connection_id = :user_connection_id
+		where id = :user_id
+		";
+		$statement = $this->connect->prepare($query);
+		$statement->bindParam(':user_connection_id', $this->user_connection_id);
+		$statement->bindParam(':user_id', $this->user_id);
+		$statement->execute();
+		
+	}
+
+	function user_disconnected($connId)
+	{
+		$query = "
+		update users 
+		set user_connection_id = null
+		where user_connection_id = :user_connection_id
+		";
+		$statement = $this->connect->prepare($query);
+		//$statement->bindParam(':user_connection_id', null);
+		$statement->bindParam(':user_connection_id', $connId);
+		$statement->execute();
+		
 	}
 
 }
