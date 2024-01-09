@@ -1,7 +1,7 @@
 <?php
 //Chat.php
 
-namespace MyApp;
+namespace MyApp{
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 require dirname(__DIR__) . "/database/ChatUser.php";
@@ -14,7 +14,7 @@ date_default_timezone_set('Asia/Kolkata');
 class Chat implements MessageComponentInterface {
     protected $clients;
 
-    protected $weburl = "https://oclapidev.onlinecampuslife.com";
+    public $weburl = "https://oclapidev.onlinecampuslife.com";
    
 
     public function __construct() {
@@ -32,7 +32,7 @@ class Chat implements MessageComponentInterface {
 		
 		parse_str($querystring,$queryarray);
 		
-		$user_object = new\ChatUser;
+		$user_object = new \ChatUser;
 		
 		//$user_object->setUserToken($queryarray['token']);
 
@@ -50,8 +50,9 @@ class Chat implements MessageComponentInterface {
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
-            $DEFAULTPROFILEICON = 'https://www.ocldev.onlinecampuslife.com/app-assets/images/user2.png';
-            $PROFILEIMAGEPATH = 'https://www.ocldev.onlinecampuslife.com/storage/profile_pictures/';
+            $DEFAULTPROFILEICON = 'https://www.dev.onlinecampuslife.com/app-assets/images/user2.png';
+            $PROFILEIMAGEPATH = 'https://www.dev.onlinecampuslife.com/storage/profile_pictures/';
+	    $weburl = "https://dev.onlinecampuslife.com";
 
             $data = json_decode($msg, true);
 		
@@ -75,7 +76,7 @@ class Chat implements MessageComponentInterface {
 			
 			$chat_message_id = $private_chat_object->save_chat();
 			
-			$user_object = new \ChatUser;
+			$user_object =new  \ChatUser;
 			
 			$user_object->setUserId($data['userId']);
 			
@@ -247,7 +248,7 @@ class Chat implements MessageComponentInterface {
 
     public function onClose(ConnectionInterface $conn) {
         // The connection is closed, remove it, as we can no longer send it messages
-        $user_object = new\ChatUser;
+        $user_object = new \ChatUser;
         $user_object->user_disconnected($conn->resourceId);
         $this->clients->detach($conn);
 
@@ -275,5 +276,5 @@ class Chat implements MessageComponentInterface {
         return $response;
     }
 }
-
+}
 ?>

@@ -1,11 +1,11 @@
 <?php
 namespace Ratchet\RFC6455\Messaging;
 
-class Message implements \IteratorAggregate, MessageInterface {
+class Message implements \Countable,\IteratorAggregate, MessageInterface {
     /**
      * @var \SplDoublyLinkedList
      */
-    private $_frames;
+	private $_frames;
 
     /**
      * @var int
@@ -17,14 +17,14 @@ class Message implements \IteratorAggregate, MessageInterface {
         $this->len = 0;
     }
 
-    public function getIterator() {
+    public function getIterator():\Traversable {
         return $this->_frames;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function count() {
+    public function count():int {
         return count($this->_frames);
     }
 

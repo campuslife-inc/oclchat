@@ -24,8 +24,8 @@ use MyApp\Chat;
        new \React\Socket\Server ('0.0.0.0:8443', $loop),
         $loop,
         array(
-            'local_cert'        => '/etc/pki/tls/certs/ocldev_onlinecampuslife_com.crt', // path to your cert
-            'local_pk'          => '/etc/pki/tls/certs/ocldev.onlinecampuslife.com.key', // path to your server private key
+            'local_cert'        => '/home/ubuntu/certificates/SSL/__onlinecampuslife_com.crt', // path to your cert
+            'local_pk'          => '/home/ubuntu/certificates/Onlinecampuslife_PRIVATEKEY.key', // path to your server private key
             'allow_self_signed' => TRUE, // Allow self signed certs (should be false in production)
             'verify_peer' => FALSE
         )

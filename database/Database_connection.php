@@ -6,7 +6,7 @@ class Database_connection
 {
 	function connect()
 	{
-		$connect = new PDO("mysql:host=localhost:3306; dbname=dev-ocl", "root", "MySQL123@");
+		$connect = new PDO("mysql:host=127.0.0.1:3306; dbname=dev_ocl", "dev", "Dev@1234");
 
 		return $connect;
 	}
