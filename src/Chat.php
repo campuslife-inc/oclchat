@@ -263,7 +263,7 @@ class Chat implements MessageComponentInterface {
 
     function pushNotification($data)
     {
-        $requestUrl = "https://www.ocldev.onlinecampuslife.com/api/v1/send_push_notification";
+        $requestUrl = "https://www.dev.onlinecampuslife.com/api/v1/send_push_notification";
     
         $response = $this->post($requestUrl, $data);
 
