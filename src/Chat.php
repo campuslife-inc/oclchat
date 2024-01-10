@@ -14,7 +14,7 @@ date_default_timezone_set('Asia/Kolkata');
 class Chat implements MessageComponentInterface {
     protected $clients;
 
-    public $weburl = "https://oclapidev.onlinecampuslife.com";
+    public $weburl = "https://devapi.onlinecampuslife.com";
    
 
     public function __construct() {
@@ -50,8 +50,8 @@ class Chat implements MessageComponentInterface {
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
-            $DEFAULTPROFILEICON = 'https://www.dev.onlinecampuslife.com/app-assets/images/user2.png';
-            $PROFILEIMAGEPATH = 'https://www.dev.onlinecampuslife.com/storage/profile_pictures/';
+            $DEFAULTPROFILEICON = 'https://dev.onlinecampuslife.com/app-assets/images/user2.png';
+            $PROFILEIMAGEPATH = 'https://dev.onlinecampuslife.com/storage/profile_pictures/';
 	    $weburl = "https://dev.onlinecampuslife.com";
 
             $data = json_decode($msg, true);
@@ -263,7 +263,7 @@ class Chat implements MessageComponentInterface {
 
     function pushNotification($data)
     {
-        $requestUrl = "https://www.dev.onlinecampuslife.com/api/v1/send_push_notification";
+        $requestUrl = "https://dev.onlinecampuslife.com/api/v1/send_push_notification";
     
         $response = $this->post($requestUrl, $data);
 
