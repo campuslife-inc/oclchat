@@ -133,14 +133,33 @@ class ChatRooms
 	function GetGroupMember($groupid,$fromuserid)
 	{
 		
-		$query = "
-		SELECT cl_group_members.group_users,upf.profileimage,users.name FROM cl_group_members 
-			INNER JOIN users 
-			ON users.id = cl_group_members.group_users 
-			INNER JOIN userprofiles upf ON upf.userid=users.id
-			WHERE cl_group_members.group_id = :groupid 
-			AND cl_group_members.group_users != :fromuser
-		"; 
+		// $query = "
+		// SELECT cl_group_members.group_users,upf.profileimage,users.name FROM cl_group_members 
+		// 	INNER JOIN users 
+		// 	ON users.id = cl_group_members.group_users 
+		// 	INNER JOIN userprofiles upf ON upf.userid=users.id
+		// 	WHERE cl_group_members.group_id = :groupid 
+		// 	AND cl_group_members.group_users != :fromuser
+		// "; 
+
+
+		$query = " SELECT 
+				cl_group_members.group_users,
+				upf.profileimage,
+				users.name 
+			FROM 
+				cl_group_members 
+			INNER JOIN 
+				users ON users.id = cl_group_members.group_users 
+			INNER JOIN 
+				userprofiles upf ON upf.userid = users.id
+			WHERE 
+				cl_group_members.group_id = :groupid 
+				AND cl_group_members.group_users != :fromuser
+				AND cl_group_members.removed_on IS NULL
+				AND cl_group_members.removed_by_user IS NULL";
+
+
 		$statement = $this->connect->prepare($query);
 		$statement->bindParam(':groupid', $groupid);
 		$statement->bindParam(':fromuser', $fromuserid);
