@@ -130,8 +130,8 @@ class Chat implements MessageComponentInterface {
                     $notifydata['users'] = $userarry;
                     $notifydata['title'] =  'Chat Message From: '. $sender_user_name ;
                     $notifydata['body'] = $private_chat_object->getChatMessage();
-                    $notifydata['icon'] = $weburl .'/public/app-assets/images/about/cl-logo.jpg';
-                    $notifydata['image'] = $weburl .'/public/app-assets/images/about/cl-logo.jpg';
+                    $notifydata['icon'] = $weburl .'/public/app-assets/images/about/cl-logo-mobile.png';
+                    $notifydata['image'] = $weburl .'/public/app-assets/images/animation/chat_notification.jpg';
                    // $notifydata['sound'] = ' ';
                     $notifydata['clickAction'] = $weburl ."/collaboration_1//".$sender_user_data['userid']."/f" ; 
                     $notifydata['additionalData']['modulename'] = 'collaboration';
