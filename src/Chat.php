@@ -133,11 +133,11 @@ class Chat implements MessageComponentInterface {
                     $notifydata['icon'] = $weburl .'/public/app-assets/images/about/cl-logo.jpg';
                     $notifydata['image'] = $weburl .'/public/app-assets/images/about/cl-logo.jpg';
                    // $notifydata['sound'] = ' ';
-                    $notifydata['clickAction'] = $weburl ."/collaboration_1//".$sender_user_data['id']."/f" ; 
+                    $notifydata['clickAction'] = $weburl ."/collaboration_1//".$sender_user_data['userid']."/f" ; 
                     $notifydata['additionalData']['modulename'] = 'collaboration';
                     $notifydata['additionalData']['transaction_code'] ='ind_chat';
-                    $notifydata['additionalData']['from_userid'] = $sender_user_data['id'] ; 
-                    $notifydata['additionalData']['to_userid'] = $receiver_user_data['id']; 
+                    $notifydata['additionalData']['from_userid'] = $sender_user_data['userid'] ; 
+                    $notifydata['additionalData']['to_userid'] = $receiver_user_data['userid']; 
                     $notifydata['additionalData']['notification_type'] = 'navigate';
                     $notifydata['additionalData']['object_id'] = $chat_message_id;
                     $notifydata['additionalData']['from_user_name'] = $sender_user_data['name'] ;
