@@ -1,1 +1,1 @@
-nohup php -c "etc/php.ini" "/var/www/OCL/Dev/DevChat/bin/server.php" &
+nohup php -c "etc/php.ini" "/var/www/OCL/Dev/oclchat/bin/server.php" &
