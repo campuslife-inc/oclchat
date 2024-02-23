@@ -21,7 +21,7 @@ use MyApp\Chat;
 
  $loop   = \React\EventLoop\Factory::create(); 
     $webSock = new \React\Socket\SecureServer(
-       new \React\Socket\Server ('0.0.0.0:8444', $loop),
+       new \React\Socket\Server ('0.0.0.0:8443', $loop),
         $loop,
         array(
             'local_cert'        => '/home/ubuntu/certificates/SSL/__onlinecampuslife_com.crt', // path to your cert
