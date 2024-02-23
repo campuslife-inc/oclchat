@@ -228,7 +228,7 @@ class Chat implements MessageComponentInterface {
             $notifydata['users'] = $grpuser;
             $notifydata['title'] =  'Group Chat Message From: '.  $user_name;
             $notifydata['body'] = $data['msg'];
-            $notifydata['icon'] = $weburl .'/public/app-assets/images/about/cl-logo.jpg';
+            $notifydata['icon'] = $weburl .'/public/app-assets/images/about/cl-logo-mobile.png';
             $notifydata['image'] = $weburl .'/public/app-assets/images/animation/chat_notification.jpg';
         // $notifydata['sound'] = ' ';
             $notifydata['clickAction'] = $weburl ."/collaboration_1//".$data['groupId']."/g" ; 
