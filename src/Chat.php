@@ -133,7 +133,7 @@ class Chat implements MessageComponentInterface {
                     $notifydata['icon'] = $weburl .'/app-assets/images/about/cl-logo-mobile.png';
                     $notifydata['image'] = $weburl .'/app-assets/images/animation/chat_notification.jpg';
                    // $notifydata['sound'] = ' ';
-                    $notifydata['clickAction'] = $weburl ."/collaboration_1//".$sender_user_data['userid']."/f" ; 
+                    $notifydata['clickAction'] = $weburl ."/v1collaboration_1//".$sender_user_data['userid']."/f" ; 
                     $notifydata['additionalData']['modulename'] = 'collaboration';
                     $notifydata['additionalData']['transaction_code'] ='ind_chat';
                     $notifydata['additionalData']['from_userid'] = $sender_user_data['userid'] ; 
@@ -231,7 +231,7 @@ class Chat implements MessageComponentInterface {
             $notifydata['icon'] = $weburl .'/app-assets/images/about/cl-logo-mobile.png';
             $notifydata['image'] = $weburl .'/app-assets/images/animation/chat_notification.jpg';
         // $notifydata['sound'] = ' ';
-            $notifydata['clickAction'] = $weburl ."/collaboration_1//".$data['groupId']."/g" ; 
+            $notifydata['clickAction'] = $weburl ."/v1collaboration_1//".$data['groupId']."/g" ; 
             $notifydata['additionalData']['modulename'] = 'collaboration';
             $notifydata['additionalData']['transaction_code'] ='group_chat';
             $notifydata['additionalData']['from_userid'] = $data['groupId']; 
