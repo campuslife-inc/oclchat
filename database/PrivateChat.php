@@ -123,29 +123,29 @@ class PrivateChat
 		return $this->connect->lastInsertId();
 	}
 
-	function save_chat_reply()
-	{
-		$query="insert into chat_message_replay (chat_master_id,to_user_id,from_user_id,chat_message,timestamp,status) 
-		values (:replyMessageId,:to_user_id,:from_user_id,:chat_message,UTC_TIMESTAMP,:status)";
+	// function save_chat_reply()
+	// {
+	// 	$query="insert into chat_message_replay (chat_master_id,to_user_id,from_user_id,chat_message,timestamp,status) 
+	// 	values (:replyMessageId,:to_user_id,:from_user_id,:chat_message,UTC_TIMESTAMP,:status)";
 		
-		$statement = $this->connect->prepare($query);
+	// 	$statement = $this->connect->prepare($query);
 
-		$statement->bindParam(':chat_master_id',$replyMessageId);
+	// 	$statement->bindParam(':chat_master_id',$replyMessageId);
 		
-		$statement->bindParam(':to_user_id',$this->to_user_id);
+	// 	$statement->bindParam(':to_user_id',$this->to_user_id);
 		
-		$statement->bindParam(':from_user_id',$this->from_user_id);
+	// 	$statement->bindParam(':from_user_id',$this->from_user_id);
 		
-		$statement->bindParam(':chat_message',$this->chat_message);
+	// 	$statement->bindParam(':chat_message',$this->chat_message);
 		
-		//$statement->bindParam(':timestamp',$this->timestamp);
+	// 	//$statement->bindParam(':timestamp',$this->timestamp);
 		
-		$statement->bindParam(':status',$this->status);
+	// 	$statement->bindParam(':status',$this->status);
 		
-		$statement->execute();
+	// 	$statement->execute();
 		
-		return $this->connect->lastInsertId();
-	}
+	// 	return $this->connect->lastInsertId();
+	// }
 	
 	function update_chat_status()
 	{
