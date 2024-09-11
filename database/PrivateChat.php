@@ -130,6 +130,7 @@ class PrivateChat
 
 	function save_chat($replyMessageId = null)
 	{
+		print_r($replyMessageId);
 		if ($replyMessageId === null || $replyMessageId === 0) {
 			// Save to chat_message table
 			$query = "INSERT INTO chat_message (to_user_id, from_user_id, chat_message, timestamp, status) 
