@@ -101,36 +101,12 @@ class PrivateChat
 		
 	}
 	
-	function save_chat()
-	{
-		$query="insert into chat_message (to_user_id,from_user_id,chat_message,timestamp,status) 
-		values (:to_user_id,:from_user_id,:chat_message,UTC_TIMESTAMP,:status)";
-		
-		$statement = $this->connect->prepare($query);
-		
-		$statement->bindParam(':to_user_id',$this->to_user_id);
-		
-		$statement->bindParam(':from_user_id',$this->from_user_id);
-		
-		$statement->bindParam(':chat_message',$this->chat_message);
-		
-		//$statement->bindParam(':timestamp',$this->timestamp);
-		
-		$statement->bindParam(':status',$this->status);
-		
-		$statement->execute();
-		
-		return $this->connect->lastInsertId();
-	}
-
-	// function save_chat_reply()
+	// function save_chat()
 	// {
-	// 	$query="insert into chat_message_replay (chat_master_id,to_user_id,from_user_id,chat_message,timestamp,status) 
-	// 	values (:replyMessageId,:to_user_id,:from_user_id,:chat_message,UTC_TIMESTAMP,:status)";
+	// 	$query="insert into chat_message (to_user_id,from_user_id,chat_message,timestamp,status) 
+	// 	values (:to_user_id,:from_user_id,:chat_message,UTC_TIMESTAMP,:status)";
 		
 	// 	$statement = $this->connect->prepare($query);
-
-	// 	$statement->bindParam(':chat_master_id',$replyMessageId);
 		
 	// 	$statement->bindParam(':to_user_id',$this->to_user_id);
 		
@@ -146,6 +122,42 @@ class PrivateChat
 		
 	// 	return $this->connect->lastInsertId();
 	// }
+
+	function save_chat($replyMessageId = null)
+	{
+		if (is_null($replyMessageId)) {
+			// Save to chat_message table
+			$query = "INSERT INTO chat_message (to_user_id, from_user_id, chat_message, timestamp, status) 
+					VALUES (:to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
+			
+			$statement = $this->connect->prepare($query);
+			
+			$statement->bindParam(':to_user_id', $this->to_user_id);
+			$statement->bindParam(':from_user_id', $this->from_user_id);
+			$statement->bindParam(':chat_message', $this->chat_message);
+			$statement->bindParam(':status', $this->status);
+			
+			$statement->execute();
+			
+			return $this->connect->lastInsertId();
+		} else {
+			// Save to chat_message_replay table
+			$query = "INSERT INTO chat_message_replay (chat_master_id, to_user_id, from_user_id, chat_message, timestamp, status) 
+					VALUES (:chat_master_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
+			
+			$statement = $this->connect->prepare($query);
+			
+			$statement->bindParam(':chat_master_id', $replyMessageId); // This is the ID of the original message
+			$statement->bindParam(':to_user_id', $this->to_user_id);
+			$statement->bindParam(':from_user_id', $this->from_user_id);
+			$statement->bindParam(':chat_message', $this->chat_message);
+			$statement->bindParam(':status', $this->status);
+			
+			$statement->execute();
+			
+			return $this->connect->lastInsertId();
+		}
+	}
 	
 	function update_chat_status()
 	{
