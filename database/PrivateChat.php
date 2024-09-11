@@ -9,6 +9,7 @@ class PrivateChat
 	private $timestamp;
 	private $status;
 	protected $connect;
+	private $replyMessageId;
 	
 	public function __construct()
 	{
@@ -56,7 +57,11 @@ class PrivateChat
 	{
 		$this->replyMessageId = $replyMessageId;
 	}
-	
+
+	// Getter for replyMessageId (optional, if needed)
+    public function getReplyMessageId() {
+        return $this->replyMessageId;
+    }
 	
 	function getChatMessage()
 	{
@@ -128,18 +133,13 @@ class PrivateChat
 	// 	return $this->connect->lastInsertId();
 	// }
 
-	function save_chat($replyMessageId = null)
+	function save_chat()
 	{
 		// Print the replyMessageId for debugging purposes
-		echo "Reply Message ID: ";
-    print_r($replyMessageId);
-    echo "Type of Reply Message ID: " . gettype($replyMessageId) . "\n";
+		print_r($this->replyMessageId);
 
-
-		if ($replyMessageId === null || $replyMessageId === '0') {
+		if ($this->replyMessageId === null || $this->replyMessageId === '0') {
 			// Save to chat_message table
-
-			echo "save chat";
 			$query = "INSERT INTO chat_message (to_user_id, from_user_id, chat_message, timestamp, status) 
 					VALUES (:to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
 
@@ -155,14 +155,13 @@ class PrivateChat
 			return $this->connect->lastInsertId();
 		} else {
 			// Save to chat_message_replay table
-			echo "replay chat";
 			$query = "INSERT INTO chat_message_replay (chat_master_id, to_user_id, from_user_id, chat_message, timestamp, status) 
 					VALUES (:chat_master_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
 
 			$statement = $this->connect->prepare($query);
 
 			// Explicitly set type to integer
-			$statement->bindParam(':chat_master_id', $replyMessageId, PDO::PARAM_INT);
+			$statement->bindParam(':chat_master_id', $this->replyMessageId, PDO::PARAM_INT);
 			$statement->bindParam(':to_user_id', $this->to_user_id);
 			$statement->bindParam(':from_user_id', $this->from_user_id);
 			$statement->bindParam(':chat_message', $this->chat_message);
