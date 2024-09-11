@@ -65,27 +65,63 @@ if(isset($_POST['action']) && $_POST['action']=='save_chat'){
 	$receiver_userid=$_POST['receiver_userid'];
 	$datetime=$_POST['datetime'];
 	$status = 'Yes';
+	$replyMessageId=$_POST['replyMessageId'];
 	
 	
-			$query="insert into chat_message (to_user_id,from_user_id,chat_message,timestamp,status) 
-		values (:to_user_id,:from_user_id,:chat_message,:timestamp,:status)";
+	// 	$query="insert into chat_message (to_user_id,from_user_id,chat_message,timestamp,status) 
+	// 	values (:to_user_id,:from_user_id,:chat_message,:timestamp,:status)";
 		
-		$statement = $connect->prepare($query);
+	// 	$statement = $connect->prepare($query);
 		
-		$statement->bindParam(':to_user_id',$receiver_userid);
+	// 	$statement->bindParam(':to_user_id',$receiver_userid);
 		
-		$statement->bindParam(':from_user_id',$user_id);
+	// 	$statement->bindParam(':from_user_id',$user_id);
 		
-		$statement->bindParam(':chat_message',$msg);
+	// 	$statement->bindParam(':chat_message',$msg);
 		
+	// 	$statement->bindParam(':timestamp',$datetime);
+		
+	// 	$statement->bindParam(':status',$status);
+		
+	// 	$statement->execute();
+	
+	
+	// echo $connect->lastInsertId();
+
+	if (is_null($replyMessageId) || !empty($replyMessageId)) {
+		// Save to chat_message table
+		$query = "INSERT INTO chat_message (to_user_id, from_user_id, chat_message, timestamp, status) 
+				VALUES (:to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
+		
+		$statement = $this->connect->prepare($query);
+		
+		$statement->bindParam(':to_user_id', $this->to_user_id);
+		$statement->bindParam(':from_user_id', $this->from_user_id);
+		$statement->bindParam(':chat_message', $this->chat_message);
+		$statement->bindParam(':status', $this->status);
 		$statement->bindParam(':timestamp',$datetime);
 		
-		$statement->bindParam(':status',$status);
+		$statement->execute();
+		
+		echo $connect->lastInsertId();
+	} else {
+		// Save to chat_message_replay table
+		$query = "INSERT INTO chat_message_replay (chat_master_id, to_user_id, from_user_id, chat_message, timestamp, status) 
+				VALUES (:chat_master_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
+		
+		$statement = $this->connect->prepare($query);
+		
+		$statement->bindParam(':chat_master_id', $replyMessageId); // This is the ID of the original message
+		$statement->bindParam(':to_user_id', $this->to_user_id);
+		$statement->bindParam(':from_user_id', $this->from_user_id);
+		$statement->bindParam(':chat_message', $this->chat_message);
+		$statement->bindParam(':status', $this->status);
+		$statement->bindParam(':timestamp',$datetime);
 		
 		$statement->execute();
-	
-	
-	echo $connect->lastInsertId();
+		
+		echo $connect->lastInsertId();
+	}
 }
 
 // if(isset($_POST['action']) && $_POST['action']=='save_chat_reply'){

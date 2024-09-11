@@ -2818,12 +2818,13 @@ order by fraindhship_date desc limit 1";
 		$receiver_userid=$_POST['receiver_userid'];
 		$datetime=$_POST['datetime'];
 		$status = 'Yes';
+		$replyMessageId=$_POST['replyMessageId'];
 	
 	
-		$query="insert into chat_message (to_user_id,from_user_id,chat_message,timestamp,status) 
-		values ($receiver_userid,$user_id,'$msg',now(),'$status')";
-		echo $query;
-		$statement = $conn_pdo->prepare($query);
+		// $query="insert into chat_message (to_user_id,from_user_id,chat_message,timestamp,status) 
+		// values ($receiver_userid,$user_id,'$msg',now(),'$status')";
+		// echo $query;
+		// $statement = $conn_pdo->prepare($query);
 		
 		/*$statement->bindParam(':to_user_id',$receiver_userid);
 		
@@ -2835,8 +2836,43 @@ order by fraindhship_date desc limit 1";
 		
 		$statement->bindParam(':status',$status);*/
 		
-		$statement->execute();
-		echo $conn_pdo->lastInsertId();
+		// $statement->execute();
+		// echo $conn_pdo->lastInsertId();
+
+		if (is_null($replyMessageId) || !empty($replyMessageId)) {
+			// Save to chat_message table
+			$query = "INSERT INTO chat_message (to_user_id, from_user_id, chat_message, timestamp, status) 
+					VALUES (:to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
+			
+			$statement = $this->connect->prepare($query);
+			
+			$statement->bindParam(':to_user_id', $this->to_user_id);
+			$statement->bindParam(':from_user_id', $this->from_user_id);
+			$statement->bindParam(':chat_message', $this->chat_message);
+			$statement->bindParam(':status', $this->status);
+			$statement->bindParam(':timestamp',$datetime);
+			
+			$statement->execute();
+			
+			echo $conn_pdo->lastInsertId();
+		} else {
+			// Save to chat_message_replay table
+			$query = "INSERT INTO chat_message_replay (chat_master_id, to_user_id, from_user_id, chat_message, timestamp, status) 
+					VALUES (:chat_master_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
+			
+			$statement = $this->connect->prepare($query);
+			
+			$statement->bindParam(':chat_master_id', $replyMessageId); // This is the ID of the original message
+			$statement->bindParam(':to_user_id', $this->to_user_id);
+			$statement->bindParam(':from_user_id', $this->from_user_id);
+			$statement->bindParam(':chat_message', $this->chat_message);
+			$statement->bindParam(':status', $this->status);
+			$statement->bindParam(':timestamp',$datetime);
+			
+			$statement->execute();
+			
+			echo $conn_pdo->lastInsertId();
+		}
 	}
 
 	// if($_POST['key']=='save_chat_reply')
