@@ -131,7 +131,10 @@ class PrivateChat
 	function save_chat($replyMessageId = null)
 	{
 		// Print the replyMessageId for debugging purposes
-		print_r($replyMessageId);
+		echo "Reply Message ID: ";
+    print_r($replyMessageId);
+    echo "Type of Reply Message ID: " . gettype($replyMessageId) . "\n";
+
 
 		if ($replyMessageId === null || $replyMessageId === '0') {
 			// Save to chat_message table
