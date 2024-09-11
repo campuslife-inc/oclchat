@@ -55,7 +55,8 @@ class Chat implements MessageComponentInterface {
 	        $weburl = "https://dev.onlinecampuslife.com";
 
             $data = json_decode($msg, true);
-		
+            var_dump($data);
+
 		if($data['command']=='Private')
 		{
 			//private chat

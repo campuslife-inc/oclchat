@@ -51,6 +51,11 @@ class PrivateChat
 	{
 		$this->chat_message = $chat_message;
 	}
+
+	function setReplyMessageId($replyMessageId)
+	{
+		$this->replyMessageId = $replyMessageId;
+	}
 	
 	
 	function getChatMessage()
