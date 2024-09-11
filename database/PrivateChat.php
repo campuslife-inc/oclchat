@@ -135,8 +135,6 @@ class PrivateChat
 
 	function save_chat()
 	{
-		// Print the replyMessageId for debugging purposes
-		print_r($this->replyMessageId);
 
 		if ($this->replyMessageId === null || $this->replyMessageId === '0') {
 			// Save to chat_message table

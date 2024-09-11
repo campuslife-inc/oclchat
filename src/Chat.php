@@ -131,6 +131,8 @@ class Chat implements MessageComponentInterface {
                     }
                    
 				}
+
+                $data['chat_message_id'] = $chat_message_id;
 				
 				if($client->resourceId==$receiver_user_connection_id || $from == $client)
 				{
