@@ -76,11 +76,12 @@ class Chat implements MessageComponentInterface {
 			$private_chat_object->setStatus('Yes');
 
             // Check if replyMessageId is present and not equal to 0
-            if (isset($data['replyMessageId']) && $data['replyMessageId'] != 0) {
+            if (isset($data['replyMessageId']) && $data['replyMessageId'] !== '' && $data['replyMessageId'] !== '0') {
                 $private_chat_object->setReplyMessageId($data['replyMessageId']); // Save reply message ID
             } else {
                 $private_chat_object->setReplyMessageId(null); // No reply, regular message
             }
+
                         
 			$chat_message_id = $private_chat_object->save_chat();
 			
