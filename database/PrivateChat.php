@@ -135,6 +135,8 @@ class PrivateChat
 
 		if ($replyMessageId === null || $replyMessageId === '0') {
 			// Save to chat_message table
+
+			echo "save chat";
 			$query = "INSERT INTO chat_message (to_user_id, from_user_id, chat_message, timestamp, status) 
 					VALUES (:to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
 
@@ -150,12 +152,14 @@ class PrivateChat
 			return $this->connect->lastInsertId();
 		} else {
 			// Save to chat_message_replay table
+			echo "replay chat";
 			$query = "INSERT INTO chat_message_replay (chat_master_id, to_user_id, from_user_id, chat_message, timestamp, status) 
 					VALUES (:chat_master_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
 
 			$statement = $this->connect->prepare($query);
 
-			$statement->bindParam(':chat_master_id', $replyMessageId, PDO::PARAM_INT); // Explicitly set type
+			// Explicitly set type to integer
+			$statement->bindParam(':chat_master_id', $replyMessageId, PDO::PARAM_INT);
 			$statement->bindParam(':to_user_id', $this->to_user_id);
 			$statement->bindParam(':from_user_id', $this->from_user_id);
 			$statement->bindParam(':chat_message', $this->chat_message);
@@ -166,6 +170,7 @@ class PrivateChat
 			return $this->connect->lastInsertId();
 		}
 	}
+
 
 	
 	function update_chat_status()
