@@ -78,8 +78,11 @@ class Chat implements MessageComponentInterface {
             // Check if replyMessageId is present and not equal to 0
             if (isset($data['replyMessageId'])) {
                 $private_chat_object->setReplyMessageId($data['replyMessageId']); // Save reply message ID
+                //get reply to message
+                $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
             } else {
                 $private_chat_object->setReplyMessageId(null); // No reply, regular message
+                $reply_to = null;
             }
 
                         
@@ -94,8 +97,7 @@ class Chat implements MessageComponentInterface {
 			$user_object->setUserId($data['receiver_userid']);
 			
 			$receiver_user_data = $user_object->get_user_data_by_id();
-            //get reply to message
-            $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
+            
 			
 			//$sender_user_name = $sender_user_data['user_name'];
             $sender_user_name = $sender_user_data['name'];
