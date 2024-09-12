@@ -93,12 +93,10 @@ class PrivateChat
 	}
 	
 	public function getReplyToMessage($replyMessageId) {
-		$master_message = DB::table('chat_message')
-			->where('chat_message_id', $replyMessageId) 
-			->select('chat_message')
-			->first();
-		
-		return $master_message ? $master_message->chat_message : null;
+			// Define the raw SQL query
+			$query = "SELECT chat_message FROM chat_message WHERE chat_message_id = :replyMessageId LIMIT 1";
+			$result = DB::select($query, ['replyMessageId' => $replyMessageId]);
+			return !empty($result) ? $result[0]->chat_message : null;
 	}
 	
 	function get_all_chat_data()
