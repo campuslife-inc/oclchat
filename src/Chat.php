@@ -98,7 +98,9 @@ class Chat implements MessageComponentInterface {
 			//$sender_user_name = $sender_user_data['user_name'];
             $sender_user_name = $sender_user_data['name'];
 			
-			$data['datetime']=$timestamp;
+			$data['datetime'] = $timestamp;
+            $data['sender_user_name'] = $sender_user_name;
+            $data['reply_to'] = $data['msg'];
 			
 			$receiver_user_connection_id = $receiver_user_data['user_connection_id'];
 			//$receiver_user_connection_id = $data['receiver_userid'];
