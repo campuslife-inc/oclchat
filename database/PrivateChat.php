@@ -93,11 +93,15 @@ class PrivateChat
 	}
 	
 	public function getReplyToMessage($replyMessageId) {
-			// Define the raw SQL query
-			$query = "SELECT chat_message FROM chat_message WHERE chat_message_id = :replyMessageId LIMIT 1";
-			$result = DB::select($query, ['replyMessageId' => $replyMessageId]);
-			return !empty($result) ? $result[0]->chat_message : null;
+
+		$query = "SELECT chat_message FROM chat_message WHERE chat_message_id = :replyMessageId LIMIT 1";
+		$statement = $this->connect->prepare($query);
+		$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
+		$statement->execute();
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+		return !empty($result) ? $result['chat_message'] : null;
 	}
+	
 	
 	function get_all_chat_data()
 	{
