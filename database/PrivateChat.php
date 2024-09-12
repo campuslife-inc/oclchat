@@ -92,7 +92,14 @@ class PrivateChat
 		return $this->status;
 	}
 	
-	
+	public function getReplyToMessage($replyMessageId) {
+		$master_message = DB::table('chat_message')
+			->where('chat_message_id', $replyMessageId) 
+			->select('chat_message')
+			->first();
+		
+		return $master_message ? $master_message->chat_message : null;
+	}
 	
 	function get_all_chat_data()
 	{

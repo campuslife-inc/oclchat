@@ -94,13 +94,15 @@ class Chat implements MessageComponentInterface {
 			$user_object->setUserId($data['receiver_userid']);
 			
 			$receiver_user_data = $user_object->get_user_data_by_id();
+            //get reply to message
+            $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
 			
 			//$sender_user_name = $sender_user_data['user_name'];
             $sender_user_name = $sender_user_data['name'];
 			
 			$data['datetime'] = $timestamp;
-            $data['sender_user_name'] = $sender_user_name;
-            $data['reply_to'] = $data['msg'];
+            $data['receiver_user_data'] = $receiver_user_data['name'];
+            $data['reply_to'] = $reply_to;
 			
 			$receiver_user_connection_id = $receiver_user_data['user_connection_id'];
 			//$receiver_user_connection_id = $data['receiver_userid'];
