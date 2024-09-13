@@ -11,6 +11,7 @@ class PrivateChat
 	private $status;
 	protected $connect;
 	private $replyMessageId;
+	private $chatReplayId;
 	
 	public function __construct()
 	{
