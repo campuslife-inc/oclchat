@@ -99,16 +99,39 @@ class PrivateChat
 		return $this->status;
 	}
 	
-	public function getReplyToMessage($replyMessageId) {
+	// public function getReplyToMessage($replyMessageId) {
 
+	// 	$query = "SELECT chat_message FROM chat_message WHERE chat_message_id = :replyMessageId LIMIT 1";
+	// 	$statement = $this->connect->prepare($query);
+	// 	$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
+	// 	$statement->execute();
+	// 	$result = $statement->fetch(PDO::FETCH_ASSOC);
+	// 	return !empty($result) ? $result['chat_message'] : null;
+	// }
+
+	public function getReplyToMessage($replyMessageId) {
+		// First, search in chat_message table
 		$query = "SELECT chat_message FROM chat_message WHERE chat_message_id = :replyMessageId LIMIT 1";
 		$statement = $this->connect->prepare($query);
 		$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
 		$statement->execute();
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
+		
+		// If a message is found in chat_message table, return it
+		if (!empty($result)) {
+			return $result['chat_message'];
+		}
+		
+		// If not found, search in chat_message_replay table
+		$query = "SELECT chat_message FROM chat_message_replay WHERE chat_replay_id = :replyMessageId LIMIT 1";
+		$statement = $this->connect->prepare($query);
+		$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
+		$statement->execute();
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+		
+		// Return the result from chat_message_replay table if found, else return null
 		return !empty($result) ? $result['chat_message'] : null;
 	}
-	
 	
 	function get_all_chat_data()
 	{
