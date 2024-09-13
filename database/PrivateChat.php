@@ -3,6 +3,7 @@
 class PrivateChat
 {
 	private $chat_message_id;
+	private $chat_parent_id;
 	private $to_user_id;
 	private $from_user_id;
 	private $chat_message;
@@ -56,6 +57,11 @@ class PrivateChat
 	function setReplyMessageId($replyMessageId)
 	{
 		$this->replyMessageId = $replyMessageId;
+	}
+
+	function setParentReplyMessageId($chatReplayId)
+	{
+		$this->chatReplayId = $chatReplayId;
 	}
 
 	// Getter for replyMessageId (optional, if needed)
@@ -161,14 +167,20 @@ class PrivateChat
 
 			return $this->connect->lastInsertId();
 		} else {
+
+			if ($this->chatReplayId === null || $this->chatReplayId == '') {
+				$this->chatReplayId = $this->replyMessageId;
+			}
+			
 			// Save to chat_message_replay table
-			$query = "INSERT INTO chat_message_replay (chat_master_id, to_user_id, from_user_id, chat_message, timestamp, status) 
+			$query = "INSERT INTO chat_message_replay (chat_master_id, chat_parent_id, to_user_id, from_user_id, chat_message, timestamp, status) 
 					VALUES (:chat_master_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
 
 			$statement = $this->connect->prepare($query);
 
 			// Explicitly set type to integer
 			$statement->bindParam(':chat_master_id', $this->replyMessageId, PDO::PARAM_INT);
+			$statement->bindParam(':chat_parent_id', $this->chatReplayId, PDO::PARAM_INT);
 			$statement->bindParam(':to_user_id', $this->to_user_id);
 			$statement->bindParam(':from_user_id', $this->from_user_id);
 			$statement->bindParam(':chat_message', $this->chat_message);
