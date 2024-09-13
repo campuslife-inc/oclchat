@@ -175,7 +175,7 @@ class PrivateChat
 			
 			// Save to chat_message_replay table
 			$query = "INSERT INTO chat_message_replay (chat_master_id, chat_parent_id, to_user_id, from_user_id, chat_message, timestamp, status) 
-					VALUES (:chat_master_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
+					VALUES (:chat_master_id, :chat_parent_id, :to_user_id, :from_user_id, :chat_message, UTC_TIMESTAMP, :status)";
 
 			$statement = $this->connect->prepare($query);
 
