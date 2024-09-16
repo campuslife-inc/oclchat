@@ -55,7 +55,8 @@ class Chat implements MessageComponentInterface {
 	        $weburl = "https://onlinecampuslife.com";
 
             $data = json_decode($msg, true);
-		
+            var_dump($data);
+
 		if($data['command']=='Private')
 		{
 			//private chat
@@ -73,7 +74,28 @@ class Chat implements MessageComponentInterface {
 			$private_chat_object->setTimestamp($timestamp);
 			
 			$private_chat_object->setStatus('Yes');
-			
+
+            // Check if either replyMessageId or chatReplayId is present and not equal to 0
+            if (isset($data['replyMessageId']) && isset($data['chatReplayId']) && $data['chatReplayId'] !== null) {
+                $private_chat_object->setReplyMessageId($data['chatReplayId']);
+                $private_chat_object->setParentReplyMessageId($data['replyMessageId']);
+                $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
+            }
+            else if(isset($data['replyMessageId']))
+            {
+                $private_chat_object->setReplyMessageId($data['replyMessageId']);
+                $private_chat_object->setParentReplyMessageId(null);
+                $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
+            }
+            else
+            {
+                $private_chat_object->setReplyMessageId(null);
+                $private_chat_object->setParentReplyMessageId(null);
+                $reply_to = null;
+            }
+        
+
+                        
 			$chat_message_id = $private_chat_object->save_chat();
 			
 			$user_object =new  \ChatUser;
@@ -85,11 +107,14 @@ class Chat implements MessageComponentInterface {
 			$user_object->setUserId($data['receiver_userid']);
 			
 			$receiver_user_data = $user_object->get_user_data_by_id();
+            
 			
 			//$sender_user_name = $sender_user_data['user_name'];
             $sender_user_name = $sender_user_data['name'];
 			
-			$data['datetime']=$timestamp;
+			$data['datetime'] = $timestamp;
+            $data['receiver_user_data'] = $receiver_user_data['name'];
+            $data['reply_to'] = $reply_to;
 			
 			$receiver_user_connection_id = $receiver_user_data['user_connection_id'];
 			//$receiver_user_connection_id = $data['receiver_userid'];
@@ -122,6 +147,8 @@ class Chat implements MessageComponentInterface {
                     }
                    
 				}
+
+                $data['chat_message_id'] = $chat_message_id;
 				
 				if($client->resourceId==$receiver_user_connection_id || $from == $client)
 				{

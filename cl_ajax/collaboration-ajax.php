@@ -2838,6 +2838,25 @@ order by fraindhship_date desc limit 1";
 		$statement->execute();
 		echo $conn_pdo->lastInsertId();
 	}
+
+	// if($_POST['key']=='save_chat_reply')
+    // {
+    //     $replyMessageId=$_POST['reply_message_id'];
+    //     $user_id=$_POST['user_id'];
+    //     $msg=$_POST['msg'];
+    //     $receiver_userid=$_POST['receiver_userid'];
+    //     $datetime=$_POST['datetime'];
+    //     $status = 'Yes';
+    
+    
+    //     $query="insert into chat_message_replay (chat_master_id,to_user_id,from_user_id,chat_message,timestamp,status) 
+    //     values ($replyMessageId,$receiver_userid,$user_id,'$msg',UTC_TIMESTAMP,'$status')";
+    //     //echo $query;
+    //     $statement = $conn_pdo->prepare($query);
+    //     $statement->execute();
+    //     echo $conn_pdo->lastInsertId();
+    // }
+
 	/*end new code*/
 	
 	
