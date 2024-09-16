@@ -76,12 +76,15 @@ class Chat implements MessageComponentInterface {
 
             // Check if either replyMessageId or chatReplayId is present and not equal to 0
             if (isset($data['replyMessageId']) || isset($data['chatReplayId'])) {
+
+                $private_chat_object->setReplyMessageId($data['replyMessageId']);
                 $private_chat_object->setParentReplyMessageId($data['chatReplayId']);
                 $reply_to = $private_chat_object->getReplyToMessage($data['chatReplayId']);
             }
             else if(isset($data['replyMessageId']))
             {
                 $private_chat_object->setReplyMessageId($data['replyMessageId']);
+                $private_chat_object->setParentReplyMessageId(null);
                 $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
             }
             else
