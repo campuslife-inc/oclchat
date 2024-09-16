@@ -55,7 +55,6 @@ class Chat implements MessageComponentInterface {
 	        $weburl = "https://dev.onlinecampuslife.com";
 
             $data = json_decode($msg, true);
-            var_dump($data);
 
 		if($data['command']=='Private')
 		{
@@ -75,24 +74,20 @@ class Chat implements MessageComponentInterface {
 			
 			$private_chat_object->setStatus('Yes');
 
-            // Check if replyMessageId is present and not equal to 0
-            if (isset($data['replyMessageId'])) {
-                $private_chat_object->setReplyMessageId($data['replyMessageId']); // Save reply message ID
-                //get reply to message
-                $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
-            } else {
-                $private_chat_object->setReplyMessageId(null); // No reply, regular message
-                $reply_to = null;
-            }
-
-
-            // Check if replyMessageId is present and not equal to 0
-             if (isset($data['chatReplayId'])) {
-                $private_chat_object->setParentReplyMessageId($data['chatReplayId']); // Save reply message ID
-                //get reply to message
+            // Check if either replyMessageId or chatReplayId is present and not equal to 0
+            if (isset($data['replyMessageId']) || isset($data['chatReplayId'])) {
+                $private_chat_object->setParentReplyMessageId($data['chatReplayId']);
                 $reply_to = $private_chat_object->getReplyToMessage($data['chatReplayId']);
-            } else {
-                $private_chat_object->setParentReplyMessageId(null); // No reply, regular message
+            }
+            else if(isset($data['replyMessageId']))
+            {
+                $private_chat_object->setReplyMessageId($data['replyMessageId']);
+                $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
+            }
+            else
+            {
+                $private_chat_object->setReplyMessageId(null);
+                $private_chat_object->setParentReplyMessageId(null);
                 $reply_to = null;
             }
 
