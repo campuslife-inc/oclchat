@@ -79,7 +79,7 @@ class Chat implements MessageComponentInterface {
             if (isset($data['replyMessageId']) && isset($data['chatReplayId']) && $data['chatReplayId'] !== null) {
                 $private_chat_object->setReplyMessageId($data['chatReplayId']);
                 $private_chat_object->setParentReplyMessageId($data['replyMessageId']);
-                $reply_to = $private_chat_object->getReplyToMessage($data['chatReplayId']);
+                $reply_to = $private_chat_object->getReplyToMessage($data['replyMessageId']);
             }
             else if(isset($data['replyMessageId']))
             {
