@@ -88,4 +88,37 @@ if(isset($_POST['action']) && $_POST['action']=='save_chat'){
 	echo $connect->lastInsertId();
 }
 
+// if(isset($_POST['action']) && $_POST['action']=='save_chat_reply'){
+	
+// 	$replyMessageId=$_POST['reply_message_id'];
+// 	$user_id=$_POST['user_id'];
+// 	$msg=$_POST['msg'];
+// 	$receiver_userid=$_POST['receiver_userid'];
+// 	$datetime=$_POST['datetime'];
+// 	$status = 'Yes';
+	
+	
+// 	$query="insert into chat_message_replay (chat_master_id,to_user_id,from_user_id,chat_message,timestamp,status) 
+// 		values (:replyMessageId,:to_user_id,:from_user_id,:chat_message,:timestamp,:status)";
+		
+// 		$statement = $connect->prepare($query);
+
+// 		$statement->bindParam(':chat_master_id',$replyMessageId);
+
+// 		$statement->bindParam(':to_user_id',$receiver_userid);
+		
+// 		$statement->bindParam(':from_user_id',$user_id);
+		
+// 		$statement->bindParam(':chat_message',$msg);
+		
+// 		$statement->bindParam(':timestamp',$datetime);
+		
+// 		$statement->bindParam(':status',$status);
+		
+// 		$statement->execute();
+	
+	
+// 	echo $connect->lastInsertId();
+// }
+
 ?>
