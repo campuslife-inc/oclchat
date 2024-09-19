@@ -184,8 +184,6 @@ class Chat implements MessageComponentInterface {
 				
 			}
 			
-			
-			
 		}
 		
 		
@@ -228,6 +226,7 @@ class Chat implements MessageComponentInterface {
             $user_object->setUserId($data['userId']);
 
             $user_data = $user_object->get_user_data_by_id();
+            $receiver_user_data = $user_object->get_user_data_by_id();
 
             $user_name = $user_data['name'];
             $profileimage =  $user_data['profileimage'];
