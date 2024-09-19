@@ -10,6 +10,9 @@ class ChatRooms
 	private $status;
 	protected $connect;
 	private $timestamp;
+	private $chat_parent_id; 
+	private $replyMessageId;
+	private $chatReplayId;
 
 	public function setChatId($chat_id)
 	{
@@ -34,6 +37,16 @@ class ChatRooms
 	function setMessage($message)
 	{
 		$this->message = $message;
+	}
+
+	function setReplyMessageId($replyMessageId)
+	{
+		$this->replyMessageId = $replyMessageId;
+	}
+
+	function setParentReplyMessageId($chatReplayId)
+	{
+		$this->chatReplayId = $chatReplayId;
 	}
 
 	function getMessage()
@@ -82,6 +95,30 @@ class ChatRooms
 		return $this->timestamp;
 	}
 
+	public function getReplyToMessage($replyMessageId) {
+		// First, search in chat_message table
+		$query = "SELECT chat_message FROM chat_message_group WHERE chat_message_id = :replyMessageId LIMIT 1";
+		$statement = $this->connect->prepare($query);
+		$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
+		$statement->execute();
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+		
+		// If a message is found in chat_message table, return it
+		if (!empty($result)) {
+			return $result['chat_message'];
+		}
+		
+		// If not found, search in chat_message_replay table
+		$query = "SELECT chat_message FROM chat_message_group_replay WHERE chat_replay_id = :replyMessageId LIMIT 1";
+		$statement = $this->connect->prepare($query);
+		$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
+		$statement->execute();
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+		
+		// Return the result from chat_message_replay table if found, else return null
+		return !empty($result) ? $result['chat_message'] : null;
+	}
+
 	public function __construct()
 	{
 		require_once("Database_connection.php");
@@ -91,26 +128,76 @@ class ChatRooms
 		$this->connect = $database_object->connect();
 	}
 
+	// function save_chat()
+	// {
+	// 	$query = "
+	// 	INSERT INTO chat_message_group 
+	// 		(to_group_id,from_user_id, chat_message, timestamp,status) 
+	// 		VALUES (:groupid,:userid, :msg, UTC_TIMESTAMP ,:status)
+	// 	";
+
+	// 	$statement = $this->connect->prepare($query);
+
+	// 	$statement->bindParam(':groupid', $this->group_id);
+	// 	$statement->bindParam(':userid', $this->user_id);
+
+	// 	$statement->bindParam(':msg', $this->message);
+
+	// 	//$statement->bindParam(':created_on', $this->timestamp);
+		
+	// 	$statement->bindParam(':status', $this->status);
+
+	// 	$statement->execute();
+	// }
+
 	function save_chat()
 	{
-		$query = "
-		INSERT INTO chat_message_group 
-			(to_group_id,from_user_id, chat_message, timestamp,status) 
-			VALUES (:groupid,:userid, :msg, UTC_TIMESTAMP ,:status)
-		";
+		// Check if it's a reply message
+		if ($this->replyMessageId === null || $this->replyMessageId === '0') {
+			// Save a new group message (non-reply)
+			$query = "
+			INSERT INTO chat_message_group (to_group_id, from_user_id, chat_message, timestamp, status) 
+			VALUES (:groupid, :userid, :msg, UTC_TIMESTAMP, :status)
+			";
 
-		$statement = $this->connect->prepare($query);
+			$statement = $this->connect->prepare($query);
 
-		$statement->bindParam(':groupid', $this->group_id);
-		$statement->bindParam(':userid', $this->user_id);
+			$statement->bindParam(':groupid', $this->group_id);
+			$statement->bindParam(':userid', $this->user_id);
+			$statement->bindParam(':msg', $this->message);
+			$statement->bindParam(':status', $this->status);
 
-		$statement->bindParam(':msg', $this->message);
+			$statement->execute();
 
-		//$statement->bindParam(':created_on', $this->timestamp);
-		
-		$statement->bindParam(':status', $this->status);
+			// Return the last inserted ID for further use
+			return $this->connect->lastInsertId();
+		} else {
+			// Handle group reply case
+			if ($this->chatReplayId === null || $this->chatReplayId == '') {
+				$this->chatReplayId = $this->replyMessageId; // Set master ID for reply
+			}
 
-		$statement->execute();
+			// Save reply to group chat
+			$query = "
+			INSERT INTO chat_message_group_replay (chat_master_id, chat_parent_id, to_group_id, from_user_id, chat_message, timestamp, status) 
+			VALUES (:chat_master_id, :chat_parent_id, :groupid, :userid, :msg, UTC_TIMESTAMP, :status)
+			";
+
+			$statement = $this->connect->prepare($query);
+
+			// Bind parameters
+			$statement->bindParam(':chat_master_id', $this->replyMessageId, PDO::PARAM_INT);  // The original message ID being replied to
+			$statement->bindParam(':chat_parent_id', $this->chatReplayId, PDO::PARAM_INT);   // If it's a nested reply, the parent message ID
+			$statement->bindParam(':groupid', $this->group_id);
+			$statement->bindParam(':userid', $this->user_id);
+			$statement->bindParam(':msg', $this->message);
+			$statement->bindParam(':status', $this->status);
+
+			$statement->execute();
+
+			// Return the last inserted ID for further use
+			return $this->connect->lastInsertId();
+		}
 	}
 
 	function get_all_chat_data()

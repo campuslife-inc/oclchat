@@ -192,60 +192,81 @@ class Chat implements MessageComponentInterface {
 		else{
 			//group chat
 		
-        $chat_object = new \ChatRooms;
+            $chat_object = new \ChatRooms;
 
-        $chat_object->setUserId($data['userId']);
-        $chat_object->setGroupId($data['groupId']);
-        $chat_object->setMessage($data['msg']);
-        $chat_object->setStatus('Yes');
+            $chat_object->setUserId($data['userId']);
+            $chat_object->setGroupId($data['groupId']);
+            $chat_object->setMessage($data['msg']);
+            $chat_object->setStatus('Yes');
 
-        $chat_object->setCreatedOn(date("Y-m-d h:i:s"));
-        $chat_object->$timestamp=date('Y-m-d h:i:s');
-        
-        $chat_object->save_chat();
+            $chat_object->setCreatedOn(date("Y-m-d h:i:s"));
+            $chat_object->$timestamp=date('Y-m-d h:i:s');
 
-        $user_object = new \ChatUser;
-
-        $user_object->setUserId($data['userId']);
-
-        $user_data = $user_object->get_user_data_by_id();
-
-        $user_name = $user_data['name'];
-        $profileimage =  $user_data['profileimage'];
-        $data['poster_user_picture'] =  $profileimage;
-
-        if(empty($profileimage)|| $profileimage ==null )
-        {
-            $data['profileimageicon'] = $DEFAULTPROFILEICON;
-            
-        }
-        else
-        {
-            $data['profileimageicon'] = $PROFILEIMAGEPATH.$profileimage;
-        }
-        
-        $data['dt'] = date("d-m-Y h:i:s");
-
-        foreach ($this->clients as $client) {
-            /*if ($from !== $client) {
-                // The sender is not the receiver, send to each client connected
-                $client->send($msg);
-            }*/
-
-            if($from == $client)
+            // Check if either replyMessageId or chatReplayId is present and not equal to 0
+            if (isset($data['replyMessageId']) && isset($data['chatReplayId']) && $data['chatReplayId'] !== null) {
+                $chat_object->setReplyMessageId($data['chatReplayId']);
+                $chat_object->setParentReplyMessageId($data['replyMessageId']);
+                $reply_to = $chat_object->getReplyToMessage($data['replyMessageId']);
+            }
+            else if(isset($data['replyMessageId']))
             {
-                $data['from'] = 'Me';
+                $chat_object->setReplyMessageId($data['replyMessageId']);
+                $chat_object->setParentReplyMessageId(null);
+                $reply_to = $chat_object->getReplyToMessage($data['replyMessageId']);
             }
             else
             {
-                $data['from'] = $user_name;
-                $data['poster_user_fullname'] = $user_name;
+                $chat_object->setReplyMessageId(null);
+                $chat_object->setParentReplyMessageId(null);
+                $reply_to = null;
+            }
+            
+            $chat_message_id = $chat_object->save_chat();
+
+            $user_object = new \ChatUser;
+
+            $user_object->setUserId($data['userId']);
+
+            $user_data = $user_object->get_user_data_by_id();
+
+            $user_name = $user_data['name'];
+            $profileimage =  $user_data['profileimage'];
+            $data['poster_user_picture'] =  $profileimage;
+
+            if(empty($profileimage)|| $profileimage ==null )
+            {
+                $data['profileimageicon'] = $DEFAULTPROFILEICON;
                 
             }
+            else
+            {
+                $data['profileimageicon'] = $PROFILEIMAGEPATH.$profileimage;
+            }
+            
+            $data['dt'] = date("d-m-Y h:i:s");
+            $data['chat_message_id'] = $chat_message_id;
+            $data['reply_to'] = $reply_to;
 
-                   $client->send(json_encode($data));
-                  
-        }
+            foreach ($this->clients as $client) {
+                /*if ($from !== $client) {
+                    // The sender is not the receiver, send to each client connected
+                    $client->send($msg);
+                }*/
+
+                if($from == $client)
+                {
+                    $data['from'] = 'Me';
+                }
+                else
+                {
+                    $data['from'] = $user_name;
+                    $data['poster_user_fullname'] = $user_name;
+                    
+                }
+
+                    $client->send(json_encode($data));
+                    
+            }
             $grpuser = [];
             $GroupMembers = $chat_object->GetGroupMember($data['groupId'],$data['userId']);
             foreach ($GroupMembers as $key => $groupuser) {
@@ -270,7 +291,7 @@ class Chat implements MessageComponentInterface {
             $notifydata['additionalData']['to_username'] = $receiver_user_data['name'] ;
             $notifydata['additionalData']['to_profileurl'] =  $data['profileimageicon'];
             $this->pushNotification($notifydata);
-	}
+	    }
     }
 
     public function onClose(ConnectionInterface $conn) {
