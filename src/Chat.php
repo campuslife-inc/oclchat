@@ -198,7 +198,10 @@ class Chat implements MessageComponentInterface {
             $chat_object->setStatus('Yes');
 
             $chat_object->setCreatedOn(date("Y-m-d h:i:s"));
-            $chat_object->timestamp = date('Y-m-d h:i:s');
+
+            $timestamp=date('Y-m-d h:i:s');
+			$chat_object->setTimestamp($timestamp);
+
 
             // Check if either replyMessageId or chatReplayId is present and not equal to 0
             if (isset($data['replyMessageId']) && isset($data['chatReplayId']) && $data['chatReplayId'] !== null) {
@@ -245,6 +248,7 @@ class Chat implements MessageComponentInterface {
             $data['dt'] = date("d-m-Y h:i:s");
             $data['chat_message_id'] = $chat_message_id;
             $data['reply_to'] = $reply_to;
+            $data['datetime'] = $timestamp;
 
             foreach ($this->clients as $client) {
                 /*if ($from !== $client) {
