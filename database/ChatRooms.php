@@ -95,29 +95,91 @@ class ChatRooms
 		return $this->timestamp;
 	}
 
+	// public function getReplyToMessage($replyMessageId) {
+	// 	// First, search in chat_message table
+	// 	$query = "SELECT chat_message FROM chat_message_group WHERE chat_message_id = :replyMessageId LIMIT 1";
+	// 	$statement = $this->connect->prepare($query);
+	// 	$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
+	// 	$statement->execute();
+	// 	$result = $statement->fetch(PDO::FETCH_ASSOC);
+		
+	// 	// If a message is found in chat_message table, return it
+	// 	if (!empty($result)) {
+	// 		return $result['chat_message'];
+	// 	}
+		
+	// 	// If not found, search in chat_message_replay table
+	// 	$query = "SELECT chat_message FROM chat_message_group_replay WHERE chat_replay_id = :replyMessageId LIMIT 1";
+	// 	$statement = $this->connect->prepare($query);
+	// 	$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
+	// 	$statement->execute();
+	// 	$result = $statement->fetch(PDO::FETCH_ASSOC);
+		
+	// 	// Return the result from chat_message_replay table if found, else return null
+	// 	return !empty($result) ? $result['chat_message'] : null;
+	// }
 	public function getReplyToMessage($replyMessageId) {
-		// First, search in chat_message table
-		$query = "SELECT chat_message FROM chat_message_group WHERE chat_message_id = :replyMessageId LIMIT 1";
+		// First, search in chat_message_group table
+		$query = "SELECT chat_message, from_user_id FROM chat_message_group WHERE chat_message_id = :replyMessageId LIMIT 1";
 		$statement = $this->connect->prepare($query);
 		$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
 		$statement->execute();
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
 		
-		// If a message is found in chat_message table, return it
+		// If a message is found in chat_message_group table, fetch the sender's name and return the message with the name
 		if (!empty($result)) {
-			return $result['chat_message'];
+			$fromUserId = $result['from_user_id'];
+			$message = $result['chat_message'];
+			
+			// Fetch the name from the userprofiles table
+			return $this->getUserName($fromUserId, $message);
 		}
 		
-		// If not found, search in chat_message_replay table
-		$query = "SELECT chat_message FROM chat_message_group_replay WHERE chat_replay_id = :replyMessageId LIMIT 1";
+		// If not found, search in chat_message_group_replay table
+		$query = "SELECT chat_message, from_user_id FROM chat_message_group_replay WHERE chat_replay_id = :replyMessageId LIMIT 1";
 		$statement = $this->connect->prepare($query);
 		$statement->bindParam(':replyMessageId', $replyMessageId, PDO::PARAM_INT);
 		$statement->execute();
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
 		
-		// Return the result from chat_message_replay table if found, else return null
-		return !empty($result) ? $result['chat_message'] : null;
+		// If a message is found in chat_message_group_replay table, fetch the sender's name and return the message with the name
+		if (!empty($result)) {
+			$fromUserId = $result['from_user_id'];
+			$message = $result['chat_message'];
+			
+			// Fetch the name from the userprofiles table
+			return $this->getUserName($fromUserId, $message);
+		}
+	
+		// Return null if no message found
+		return null;
 	}
+	
+	private function getUserName($fromUserId, $message) {
+		// Fetch the fullname from the userprofiles table
+		$query = "SELECT fullname FROM userprofiles WHERE userid = :fromUserId LIMIT 1";
+		$statement = $this->connect->prepare($query);
+		$statement->bindParam(':fromUserId', $fromUserId, PDO::PARAM_INT);
+		$statement->execute();
+		$user = $statement->fetch(PDO::FETCH_ASSOC);
+	
+		// If user is found, return the message with the user's name
+		if (!empty($user)) {
+			return [
+				'message' => $message,
+				'from_user_name' => $user['fullname'],
+				'from_user_id' => $fromUserId
+			];
+		}
+	
+		// Return only the message if no user is found
+		return [
+			'message' => $message,
+			'from_user_name' => null,
+			'from_user_id' => $fromUserId
+		];
+	}
+	
 
 	public function __construct()
 	{
