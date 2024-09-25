@@ -73,7 +73,7 @@ class Chat implements MessageComponentInterface {
 			
 			$private_chat_object->setTimestamp($timestamp);
 			
-			$private_chat_object->setStatus('Yes');
+			$private_chat_object->setStatus('No');
 
             // Check if either replyMessageId or chatReplayId is present and not equal to 0
             if (isset($data['replyMessageId']) && isset($data['chatReplayId']) && $data['chatReplayId'] !== null) {
@@ -195,7 +195,7 @@ class Chat implements MessageComponentInterface {
             $chat_object->setUserId($data['userId']);
             $chat_object->setGroupId($data['groupId']);
             $chat_object->setMessage($data['msg']);
-            $chat_object->setStatus('Yes');
+            $chat_object->setStatus('No');
 
             $chat_object->setCreatedOn(date("Y-m-d h:i:s"));
 
